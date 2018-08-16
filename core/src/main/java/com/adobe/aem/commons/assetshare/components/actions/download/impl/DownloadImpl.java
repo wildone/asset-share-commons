@@ -41,26 +41,25 @@ import java.util.Collection;
 @Model(
         adaptables = {SlingHttpServletRequest.class},
         adapters = {Download.class},
-        resourceType = {DownloadImpl.RESOURCE_TYPE},
-        cache = true
+        resourceType = {DownloadImpl.RESOURCE_TYPE}
 )
 public class DownloadImpl implements Download {
     protected static final String RESOURCE_TYPE = "asset-share-commons/components/modals/download";
 
     @Self
     @Required
-    private SlingHttpServletRequest request;
+    protected SlingHttpServletRequest request;
 
     @ValueMapValue
     @Optional
     @Default(values = "Assets")
-    private String zipFileName;
+    protected String zipFileName;
 
     @OSGiService
     @Required
-    private ActionHelper actionHelper;
+    protected ActionHelper actionHelper;
 
-    private Collection<AssetModel> assets = new ArrayList<>();
+    protected Collection<AssetModel> assets = new ArrayList<>();
 
     @PostConstruct
     protected void init() {

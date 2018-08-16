@@ -19,10 +19,22 @@
 
 package com.adobe.aem.commons.assetshare.components.predicates;
 
+import com.day.cq.search.PredicateGroup;
+import org.osgi.annotation.versioning.ProviderType;
+
 import java.util.List;
 import java.util.Map;
 
+@ProviderType
 public interface PagePredicate extends Predicate {
+    enum ParamTypes {
+        NODE_TYPE,
+        PATH,
+        GUESS_TOTAL,
+        LIMIT,
+        HIDDEN_PREDICATES,
+        SEARCH_PREDICATES;
+    }
 
     String getOrderBy();
 
@@ -34,5 +46,20 @@ public interface PagePredicate extends Predicate {
 
     List<String> getPaths();
 
+    PredicateGroup getPredicateGroup();
+
+    PredicateGroup getPredicateGroup(ParamTypes... excludeParamTypes);
+
+    /**
+     * Deprecated. Use getPredicateGroup() instead.
+     */
+    @Deprecated
     Map<String, String> getParams();
+
+    /**
+     * Deprecated. Use getPredicateGroup(ParamTypes... excludeParamTypes) instead.
+     */
+    @Deprecated
+    Map<String, String> getParams(ParamTypes... excludeParamTypes);
+
 }

@@ -56,6 +56,9 @@ import java.util.*;
 public class TagsPredicateImpl extends AbstractPredicate implements TagsPredicate {
     protected static final String RESOURCE_TYPE = "asset-share-commons/components/search/tags";
 
+    private static final String SORT_ALPHABETICAL = "alphabetical";
+    private static final String SORT_NATURAL = "natural";
+
     @Self
     @Required
     SlingHttpServletRequest request;
@@ -75,10 +78,16 @@ public class TagsPredicateImpl extends AbstractPredicate implements TagsPredicat
     @Default(booleanValues = false)
     private boolean and;
 
-    @ValueMapValue @Default(values = JcrPropertyPredicateEvaluator.OP_EQUALS)
+    @ValueMapValue
+    @Default(values = SORT_NATURAL)
+    private String displayOrder;
+
+    @ValueMapValue
+    @Default(values = JcrPropertyPredicateEvaluator.OP_EQUALS)
     private String operation;
 
-    private ValueMap valuesFromRequest = null;
+    private String valueFromRequest;
+    private ValueMap valuesFromRequest;
 
     @PostConstruct
     protected void init() {
@@ -89,13 +98,14 @@ public class TagsPredicateImpl extends AbstractPredicate implements TagsPredicat
         return coreOptions.getType();
     }
 
-     /* Property Predicate Specific */
+    /* Property Predicate Specific */
 
     public String getSubType() {
         //support variation of Checkboxes
         return typeString;
     }
 
+    @Override
     public String getProperty() {
         return StringUtils.defaultIfBlank(property, "jcr:content/metadata/cq:tags");
     }
@@ -110,7 +120,9 @@ public class TagsPredicateImpl extends AbstractPredicate implements TagsPredicat
         return PropertyValuesPredicateEvaluator.VALUES;
     }
 
-    public boolean hasOperation() { return StringUtils.isNotBlank(operation); }
+    public boolean hasOperation() {
+        return StringUtils.isNotBlank(operation);
+    }
 
     public String getOperation() {
         return operation;
@@ -139,38 +151,32 @@ public class TagsPredicateImpl extends AbstractPredicate implements TagsPredicat
             }
         }
 
+        if (SORT_ALPHABETICAL.equals(displayOrder)) {
+            Collections.sort(items, new AlphabeticalOptionItems());
+        }
+
         return items;
     }
 
     @Override
     public boolean isReady() {
-        return getItems().size() > 0;
+        final TagManager tagManager = request.getResourceResolver().adaptTo(TagManager.class);
+        return tagManager.getTags(request.getResource()).length > 0;
     }
 
     @Override
     public String getInitialValue() {
-        return null;
+        if (valueFromRequest == null) {
+            valueFromRequest = PredicateUtil.getInitialValue(request, this, PropertyValuesPredicateEvaluator.VALUES);
+        }
+
+        return valueFromRequest;
     }
 
     @Override
     public ValueMap getInitialValues() {
         if (valuesFromRequest == null) {
-            valuesFromRequest = new ValueMapDecorator(new HashMap<>());
-
-            for (Map.Entry<String, RequestParameter[]> entry : request.getRequestParameterMap().entrySet()) {
-                final List<String> values = new ArrayList<>();
-                if (entry.getKey().matches("^" + getGroup() + "." + getName() + ".\\d*_?" + PropertyValuesPredicateEvaluator.VALUES + "$")) {
-                    for (final RequestParameter tmp : entry.getValue()) {
-                        if (StringUtils.isNotBlank(tmp.getString())) {
-                            values.add(tmp.getString());
-                        }
-                    }
-                }
-
-                if (!values.isEmpty()) {
-                    valuesFromRequest.put(entry.getKey(), values.toArray(new String[values.size()]));
-                }
-            }
+            valuesFromRequest = PredicateUtil.getInitialValues(request, this, PropertyValuesPredicateEvaluator.VALUES);
         }
 
         return valuesFromRequest;

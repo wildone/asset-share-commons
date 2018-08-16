@@ -4,7 +4,87 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unrelease]
+## [Unreleased]
+
+### Fixed
+- 0227: Sites editor is missing workflow status information
+
+## [v1.6.2]
+
+### Changed
+- 0069: Fixes issue with request URI being too long for modals by switching from GET to POST
+
+### Fixed
+- 0218: Fixes issue with Action Buttons' Download not working for Licensed assets when Licensing is disabled.
+- 0221: Fixes logic for Dynamic Media download modal to display a dropdown when image presets are set 
+
+## [v1.6.0]
+
+### Added
+- 0208: Addition of Smart Tags Computed Property and support of Smart Tags in the Tags Asset Details Component.
+- 0184: Added Search Predicates framework and provided OOTB implementations for: Exclude Content Fragments, Exclude Expired Assets, Exclude Sub-assets.
+- 0182: Added resource providers for Search and Asset Details pages that warn about mis-configurations of Asset Share Commons in AEM Author.
+- 0191: Support alphabetical or natural ordering of Tags in in the Tags search predicate. Fixed issues with Source options in dialog as well.
+
+### Fixed
+- 0204: For mobile and tablet view, the filter rail should slide from left.
+- 0195: Search does not work in IE11 - Missing findIndex() & find() methods.
+
+## [v1.5.2]
+
+- 0177: Removed cache=true on all Sling Model definitions due to memory leaks.(See https://issues.apache.org/jira/browse/SLING-7586)
+- 0168: Fixed issue with the rail rendering in Authoring mode.
+
+## [v1.5.0]
+
+### Added
+- 0034/0046: Dynamic Media Download modal and image presets datasource
+- 0147: Asset Details Video component added to provide in-page video playback on Asset Details pages.
+
+### Fixed
+
+- 0126: Updated the include of AEM Responsive Grid's grid_base.less to a singular file copied into the Asset Share Commons codebase to support AEM 6.3.1 and AEM 6.4 in the same package.   
+- 0156: Asset cart does not populate correctly in AEM 6.4.0.
+- 0149: The Metadata Properties datasource now includes multi-value text widgets defined on the AEM Assets Metadata Schemas.
+- 0152: Fixed issue with leaking resource resolver in QueryBuilder APIs. This was previously thought to be fixed in v1.2.2 #0103. Note this fix is also back-ported to v1.1.4. 
+
+## [v1.4.0]
+
+### Changed
+
+- 0141: Updated Search results to request the main and rail content to allow for more simpler and more robust use of data-asset-share-update-method.
+
+## [v1.3.0]
+
+### Fixed
+- 0131: Fixed ContextHub eventing condition that cause the user menu profile to act as "anonymous" on the first page via by an auth'd user.
+
+### Added
+- 0128: Path Filter search component.
+- 0130: Added auto-search capabilities to search predicate components.
+- 0134: Allow multiple ShareServices to be registered and allow each to accept the request.
+
+## [v1.2.2]
+
+### Fixed
+- 0123: Fixed issued with OOTB ContextHub store type nodes not installing.
+
+## [v1.2.0]
+
+### Fixed
+- 0114: Removed replication status properties from templates and policies.
+
+### Changed
+- 0076: Reduced sample video asset file sizes in ui.content project.
+- 0101: User Menu's profile information to be driven via ContextHub rather than uncache-able server-side code; Also added a variety of OOTB context hub stores (profile, surfer info, etc.) 
+- 0108: Updated Download Modal to all for the exclusion of original assets in the download zip.
+- 0113: Align cards to left in search results.
+
+## [v1.1.2]
+
+### Fixed
+- 0102: Fixed the PID for the Asset Share Commons - E-mail Service to the fully qualified class name.
+- 0103: Resolve the search results hits using the request's resource resolver to prevent resource leakage.
 
 ## [v1.1.0]
 
